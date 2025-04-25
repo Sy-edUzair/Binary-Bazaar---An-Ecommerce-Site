@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block optionalcard %}
+  <div class="nav-card" style="border-radius: 4px;">
+    <div class="nav-card-body">
+      <p>All Categories</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    {% for category in categories %}
+      <div class="col-lg-4">
+        <div class="box-element">
+          <img src="{{ category.imageURL }}" class="card-img-top thumbnail" alt="category image" />
+          <div class="card-body">
+            <h5 class="card-title">{{ category.title }}</h5>
+            <a href="{% url 'store:render_category' slug=category.slug %}" class="btn btn-primary">View Products</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

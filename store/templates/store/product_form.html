@@ -1,0 +1,36 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block customstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/sign-up.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <div class="shadow-wrap">
+    <div class="form-wrap">
+      <h2>Product Description</h2>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">{{ form.title }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.price }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.image }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.description }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.tags }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.category }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.in_stock.label }}
+          {{ form.in_stock }}
+          {{ form.errors }}</div>
+        <div class="form-group">{{ form.is_digital.label }}
+          {{ form.is_digital }}
+          {{ form.errors }}</div>
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

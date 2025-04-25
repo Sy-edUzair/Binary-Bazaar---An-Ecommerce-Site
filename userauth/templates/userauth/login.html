@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block customstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/sign-up.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <div class="shadow-wrap">
+    <div class="form-wrap">
+      <h2>Login</h2>
+      <p>
+        Don't have an account? <a href="{% url 'userauth:sign-up' %}">Sign Up</a>
+      </p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="email" required name="email" placeholder="Email" />
+        </div>
+        <div class="form-group">
+          <input type="password" required name="password" placeholder="Password" />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

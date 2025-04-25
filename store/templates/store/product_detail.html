@@ -1,0 +1,110 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block customstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/sign-up.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="{{ product.imageURL }}" class="img-fluid" alt="{{ product.title }}" />
+      </div>
+      <div class="col-md-6">
+        <h1>{{ product.title }}</h1>
+        <h4 class="text-muted">{{ product.vendor.name }}</h4>
+        <p>{{ product.description }}</p>
+        <h3 class="text-primary">${{ product.price }}</h3>
+        <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="inline-form">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">Add to Cart</button>
+        </form>
+        <button class="btn btn-secondary">Buy Now</button>
+        <form method="post" action="{% url 'store:wish-list' %}" class="inline-form">
+          {% csrf_token %}
+          <input type="hidden" value="{{ product.slug }}" name="product_slug" />
+          <button type="submit" class="btn btn-outline-primary">♥</button>
+        </form>
+        {% if product.get_rating %}
+          <span class="badge bg-warning text-dark">{{ product.get_rating|get_stars }}</span>
+        {% else %}
+          <span class="badge bg-warning text-dark">No Reviews yet</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Reviews section -->
+    {% if reviews %}
+      <div class="all-reviews">
+        <h2>Reviews</h2>
+        <ul>
+          {% for review in reviews %}
+            <li>
+              <div class="review-section">
+                <p style="text-transform: capitalize; font-weight: bold; font-size:25px;">{{ review.user.username }}</p>
+                <p>{{ review.rating|get_stars }}</p>
+              </div>
+              <p>{{ review.text|linebreaks }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    <div class="shadow-wrap">
+      <div class="form-wrap">
+        <h2>Submit Your Review</h2>
+        <form method="post" action="{% url 'store:render_product' slug=product.slug %}">
+          {% csrf_token %}
+          {% for field in review_form %}
+            <div class="form-group">{{ field }}
+              {{ field.errors }}</div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Related Products Section -->
+    <div class="mt-5">
+      <h4>Related Products</h4>
+      <div class="row">
+        {% for related_product in related_products %}
+          {% if related_product.product_status == 'published' %}
+            <div class="col-lg-4">
+              <div class="box-element">
+                <img src="{{ related_product.imageURL }}" class="card-img-top" alt="product image" />
+
+                <div class="card-body">
+                  <h5 class="card-title">{{ related_product.title }}</h5>
+                  <p class="card-text">${{ related_product.price }}</p>
+                  <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="inline-form">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit">Add to Cart</button>
+                  </form>
+                  {% if related_product.slug %}
+                    <a href="{% url 'store:render_product' slug=related_product.slug %}" class="btn btn-primary">View</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% if notices %}
+  {% for notice in notices %}
+    <div class="notice-list">
+      <div class="post-date bg-skyblue">{{ notice.date_posted }}</div>
+      <h6 class="notice-title"><a href="#">{{ notice.message }}</a></h6>
+      <div class="entry-meta">{{ notice.user.name }}</div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="notice-list">
+    <h6 class="notice-title">No New Notifications yet!</h6>
+  </div>
+{% endif %}

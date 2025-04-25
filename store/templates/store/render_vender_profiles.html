@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block optionalcard %}
+  <div class="nav-card" style="border-radius: 4px;">
+    <div class="nav-card-body">
+      <p style="text-transform: capitalize;">{{ request.user.username }}'s Vendor Profiles</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    {% for vendor in vendors %}
+      <div class="col-lg-4">
+        <div class="box-element">
+          <img src="{{ vendor.imageURL }}" class="card-img-top thumbnail" alt="vendor image" />
+          <div class="card-body">
+            <h5 class="card-title">{{ vendor.name }}</h5>
+            <p class="card-text">
+              <b>Contact:</b> {{ vendor.contact }}
+            </p>
+            <p>
+              <b>Rating:</b> {{ vendor.v_rating|get_stars }}
+            </p>
+            {% if vendor.slug %}
+              <a href="{% url 'store:vendor_dashboard' slug=vendor.slug %}" class="btn btn-primary">View Dashboard</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

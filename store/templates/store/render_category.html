@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block optionalcard %}
+  <div class="nav-card" style="border-radius: 4px;">
+    <div class="nav-card-body">
+      <p>{{ category }} Products</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    {% for product in products %}
+      {% if product.product_status == 'published' %}
+        <div class="col-lg-4">
+          <div class="box-element">
+            <img src="{{ product.imageURL }}" class="card-img-top" alt="product image" />
+
+            <div class="card-body">
+              <h5 class="card-title">{{ product.title }}</h5>
+              <p class="card-text">${{ product.price }}</p>
+              <form method="post" action="{% url 'store:add_to_cart' product.id %}" class="inline-form">
+                {% csrf_token %}
+                <button class="btn btn-primary" type="submit">Add to Cart</button>
+              </form>
+              {% if product.slug %}
+                <a href="{% url 'store:render_product' slug=product.slug %}" class="btn btn-primary">View</a>
+              {% endif %}
+              <form method="post" action="{% url 'store:wish-list' %}" class="inline-form">
+                {% csrf_token %}
+                <input type="hidden" value="{{ product.slug }}" name="product_slug" />
+                <button type="submit" class="btn btn-outline-primary">♥</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}
